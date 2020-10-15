@@ -6,12 +6,12 @@
 enum TokCode {t_eof, t_name, t_number, t_symbol, t_LF};
 typedef struct Tok { TokCode code {t_eof}; S symbol {"X"}; S name {"<X>"}; double value {0.0}; } Tok;
 
-struct TokStream { 
+struct Lexer { 
     M<S, TokCode> keywords; 
     Tok CurTok; 
     char ch;
 
-    TokStream() : keywords {}, ch {' '} {} 
+    Lexer() : keywords {}, ch {' '} {} 
 
     S to_string(TokCode c) { return (c == t_eof ? "eof" : c == t_name ? "name" : c == t_number ? "number" : c == t_symbol ? "symbol" : c == t_LF ? "\n" :"unknown"); }
     Tok readNextTok() {

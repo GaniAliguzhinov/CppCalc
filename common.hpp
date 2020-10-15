@@ -20,7 +20,7 @@ using std::cout;
 // into ch and returns all read chars as a string
 template<typename Lambda>
 S consume(char& ch, Lambda l) {
-    S r = S {ch};
+    S r {ch};
     while (cin.get(ch) && l(ch))
         r += ch;
     return r;

@@ -17,7 +17,7 @@ struct TokStream {
     Tok readNextTok() {
         Tok cur;
         if (isspace(ch) && ch != '\n') eatWS();
-        if (ch == '_') {
+        if (isalpha(ch)) {
             cur.name = readName();
             if (findKeyword(cur)) {
                 return CurTok = cur;
@@ -39,6 +39,8 @@ struct TokStream {
             cin.get(ch);
             return CurTok = cur;
         }
+        if (ch == '<')
+            return finishSymbol(cur, '-');
         cur.symbol = S {ch};
         cin.get(ch);
         cur.code = t_symbol;
@@ -53,19 +55,30 @@ struct TokStream {
             }
         return false;
     }
+    Tok finishSymbol(Tok t, char last) {
+        char first = ch;
+        S full = S{first} + S{last};
+        if (cin.get(ch) && ch == last) {
+            t.symbol = full;
+            cin.get(ch);
+        } else
+            t.symbol = S{first};
+        t.code = t_symbol;
+        return CurTok = t;
+    }
     void eatWS() {
         auto lambda = [](char ch) {return isspace(ch) && ch != '\n';};
         consume(ch, lambda);
     }
     S readName() {
         auto lambda = [](char ch) {return isalnum(ch);};
-        return S {ch} + consume(ch, lambda);
+        return consume(ch, lambda);
     }
     double readDouble() {
         auto lambda = [](char ch) {return isdigit(ch);};
-        S r = S {ch} + consume(ch, lambda);
+        S r = consume(ch, lambda);
         if (ch == '.') 
-            r += S{ch} + consume(ch, lambda);
+            r += consume(ch, lambda);
         return strtod(r.c_str(), nullptr);
     }
 };

@@ -15,12 +15,12 @@ using std::move;
 using std::cin;
 using std::cout;
 
-// Discards current value of ch, reads characters into ch as 
+// Reads characters into ch as 
 // long as condintion l is satisfied, then reads one more char
 // into ch and returns all read chars as a string
 template<typename Lambda>
 S consume(char& ch, Lambda l) {
-    S r = "";
+    S r = S {ch};
     while (cin.get(ch) && l(ch))
         r += ch;
     return r;
